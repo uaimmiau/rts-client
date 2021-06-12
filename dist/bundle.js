@@ -51190,7 +51190,10 @@ __webpack_require__.r(__webpack_exports__);
     moveForward: false,
     moveBackward: false,
     camDistance: 100,
-    camHeight: 100
+    camHeight: 100,
+    lookX: 0,
+    lookZ: 0,
+
 });
 
 /***/ }),
@@ -51251,6 +51254,40 @@ class Keyboard {
     }
 
 
+}
+
+/***/ }),
+
+/***/ "./src/components/Light.js":
+/*!*********************************!*\
+  !*** ./src/components/Light.js ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Light)
+/* harmony export */ });
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+
+
+class Light extends three__WEBPACK_IMPORTED_MODULE_0__.Object3D {
+    constructor() {
+        super()
+        this.light = new three__WEBPACK_IMPORTED_MODULE_0__.PointLight(0xffffff, 1, 500)
+        this.light.position.set(0, 0, 0)
+        this.light.castShadow = true
+        this.add(this.light)
+
+        this.geometry = new three__WEBPACK_IMPORTED_MODULE_0__.SphereGeometry(10, 3, 2)
+        this.material = new three__WEBPACK_IMPORTED_MODULE_0__.MeshBasicMaterial({
+            color: 0xffff00,
+            wireframe: true
+        })
+        let mesh = new three__WEBPACK_IMPORTED_MODULE_0__.Mesh(this.geometry, this.material)
+        this.add(mesh)
+        this.castShadow = true
+    }
 }
 
 /***/ }),
@@ -51758,16 +51795,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ Main)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
 /* harmony import */ var _Renderer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Renderer */ "./src/components/Renderer.js");
 /* harmony import */ var _Camera__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Camera */ "./src/components/Camera.js");
-/* harmony import */ var _Config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Config */ "./src/components/Config.js");
-/* harmony import */ var _Player__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Player */ "./src/components/Player.js");
-/* harmony import */ var three_examples_jsm_controls_OrbitControls_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! three/examples/jsm/controls/OrbitControls.js */ "./node_modules/three/examples/jsm/controls/OrbitControls.js");
-/* harmony import */ var _Keyboard__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Keyboard */ "./src/components/Keyboard.js");
-/* harmony import */ var _Box__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Box */ "./src/components/Box.js");
-/* harmony import */ var _Model__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Model */ "./src/components/Model.js");
-/* harmony import */ var _assets_mario_md2__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./assets/mario.md2 */ "./src/components/assets/mario.md2");
+/* harmony import */ var _Light__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Light */ "./src/components/Light.js");
+/* harmony import */ var _Config__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Config */ "./src/components/Config.js");
+/* harmony import */ var _Player__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Player */ "./src/components/Player.js");
+/* harmony import */ var three_examples_jsm_controls_OrbitControls_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! three/examples/jsm/controls/OrbitControls.js */ "./node_modules/three/examples/jsm/controls/OrbitControls.js");
+/* harmony import */ var _Keyboard__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Keyboard */ "./src/components/Keyboard.js");
+/* harmony import */ var _Box__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Box */ "./src/components/Box.js");
+/* harmony import */ var _Model__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Model */ "./src/components/Model.js");
+/* harmony import */ var _assets_mario_md2__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./assets/mario.md2 */ "./src/components/assets/mario.md2");
+
 
 
 
@@ -51783,60 +51822,79 @@ __webpack_require__.r(__webpack_exports__);
 class Main {
     constructor(container) {
         this.container = container
-        this.scene = new three__WEBPACK_IMPORTED_MODULE_8__.Scene()
+        this.scene = new three__WEBPACK_IMPORTED_MODULE_9__.Scene()
         this.renderer = new _Renderer__WEBPACK_IMPORTED_MODULE_0__.default(container)
         this.camera = new _Camera__WEBPACK_IMPORTED_MODULE_1__.default(75, window.innerWidth, window.innerHeight)
         this.camera.position.set(100, 100, 100)
-        this.camera.lookAt(new three__WEBPACK_IMPORTED_MODULE_8__.Vector3(0, 0, 0))
-        this.grid = new three__WEBPACK_IMPORTED_MODULE_8__.GridHelper(1000, 10)
+        this.camera.lookAt(new three__WEBPACK_IMPORTED_MODULE_9__.Vector3(0, 0, 0))
+        this.grid = new three__WEBPACK_IMPORTED_MODULE_9__.GridHelper(1000, 10)
         this.scene.add(this.grid)
 
-        this.player = new _Player__WEBPACK_IMPORTED_MODULE_3__.default()
-        this.player.position.set(0, 10, 0)
-        this.scene.add(this.player)
+        // this.player = new Player()
+        // this.player.position.set(0, 10, 0)
+        // this.scene.add(this.player)
+        this.keybord = new _Keyboard__WEBPACK_IMPORTED_MODULE_5__.default(window)
 
-        this.keybord = new _Keyboard__WEBPACK_IMPORTED_MODULE_4__.default(window)
+        // C(l)ock
+        this.clock = new three__WEBPACK_IMPORTED_MODULE_9__.Clock()
 
         // Load unit model/s
-        this.manager = new three__WEBPACK_IMPORTED_MODULE_8__.LoadingManager()
-        this.model = new _Model__WEBPACK_IMPORTED_MODULE_6__.default(this.manager)
-        this.model.load(_assets_mario_md2__WEBPACK_IMPORTED_MODULE_7__)
+        this.units = []
+        this.manager = new three__WEBPACK_IMPORTED_MODULE_9__.LoadingManager()
+        this.model = new _Model__WEBPACK_IMPORTED_MODULE_7__.default(this.manager)
+        this.model.load(_assets_mario_md2__WEBPACK_IMPORTED_MODULE_8__)
         this.manager.onLoad = () => {
-            let unit = this.model.clone()
-            this.scene.add(unit)
+            for (let i = 0; i < 3; i++) {
+                let unit = this.model.clone()
+                unit.position.set(50 * i, 25, 0)
+                this.scene.add(unit)
+                this.units.push(unit)
+            }
         }
+
+        // adding some light to see the models
+        let l = new _Light__WEBPACK_IMPORTED_MODULE_2__.default()
+        l.position.set(0, 100, 0)
+        this.scene.add(l)
 
         // this.raycaster = new Raycaster()
 
-        this.div = document.querySelector('#num')
-        this.prev = document.querySelector('#prev')
+        // this.div = document.querySelector('#num')
+        // this.prev = document.querySelector('#prev')
 
-        this.controls = new three_examples_jsm_controls_OrbitControls_js__WEBPACK_IMPORTED_MODULE_9__.OrbitControls(this.camera, this.renderer.domElement)
+        // this.controls = new OrbitControls(this.camera, this.renderer.domElement)
+        this.controls = new three_examples_jsm_controls_OrbitControls_js__WEBPACK_IMPORTED_MODULE_10__.MapControls(this.camera, this.renderer.domElement)
 
         this.render();
     }
 
     render() {
+        let delta = this.clock.getDelta()
+        // todo: update all animations with delta
 
-        if (_Config__WEBPACK_IMPORTED_MODULE_2__.default.moveForward) this.player.translateZ(2)
-        if (_Config__WEBPACK_IMPORTED_MODULE_2__.default.moveBackward) this.player.translateZ(-2)
-        if (_Config__WEBPACK_IMPORTED_MODULE_2__.default.rotateRight) this.player.rotation.y -= 0.01
-        if (_Config__WEBPACK_IMPORTED_MODULE_2__.default.rotateLeft) this.player.rotation.y += 0.01
+
+
+
+        // if (Config.moveForward) this.player.translateZ(2)
+        // if (Config.moveBackward) this.player.translateZ(-2)
+        // if (Config.rotateRight) this.player.rotation.y -= 0.01
+        // if (Config.rotateLeft) this.player.rotation.y += 0.01
 
 
         // Have camera follow player and set orbit controls target
-        if (_Config__WEBPACK_IMPORTED_MODULE_2__.default.moveForward || _Config__WEBPACK_IMPORTED_MODULE_2__.default.moveBackward || _Config__WEBPACK_IMPORTED_MODULE_2__.default.rotateLeft || _Config__WEBPACK_IMPORTED_MODULE_2__.default.rotateRight) {
-            const camVect = new three__WEBPACK_IMPORTED_MODULE_8__.Vector3(0, _Config__WEBPACK_IMPORTED_MODULE_2__.default.camHeight, -_Config__WEBPACK_IMPORTED_MODULE_2__.default.camDistance)
-            const camPos = camVect.applyMatrix4(this.player.matrixWorld);
-            this.camera.position.x = camPos.x
-            this.camera.position.y = camPos.y
-            this.camera.position.z = camPos.z
-            this.camera.lookAt(this.player.position)
-            this.camera.updateProjectionMatrix()
+        if (_Config__WEBPACK_IMPORTED_MODULE_3__.default.moveForward || _Config__WEBPACK_IMPORTED_MODULE_3__.default.moveBackward || _Config__WEBPACK_IMPORTED_MODULE_3__.default.rotateLeft || _Config__WEBPACK_IMPORTED_MODULE_3__.default.rotateRight) {
+            // const camVect = new Vector3(0, Config.camHeight, -Config.camDistance)
+            // const camPos = camVect.applyMatrix4(this.player.matrixWorld);
+            // this.camera.position.x = camPos.x
+            // this.camera.position.y = camPos.y
+            // this.camera.position.z = camPos.z
+            // this.camera.lookAt(this.player.position)
+            // this.camera.updateProjectionMatrix()
             // this.camera.rotateZ(this.controls.getPolarAngle())
             // this.camera.rotateY(this.controls.getAzimuthalAngle())
         }
-        this.controls.target = this.player.position
+        // this.controls.target = this.player.position
+        // console.log(this.camera.position)
 
 
 

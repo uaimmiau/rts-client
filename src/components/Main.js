@@ -22,6 +22,9 @@ import Keyboard from './Keyboard'
 import Box from './Box'
 import Model from './Model'
 import marioMD2 from "./assets/mario.md2"
+import Animation from './Animation'
+import Unit from './Unit'
+import Select from './Select'
 
 export default class Main {
     constructor(container) {
@@ -37,8 +40,11 @@ export default class Main {
         // this.player = new Player()
         // this.player.position.set(0, 10, 0)
         // this.scene.add(this.player)
-
         this.keybord = new Keyboard(window)
+        this.raycaster = new Raycaster()
+
+        // C(l)ock
+        this.clock = new Clock()
 
         // Load unit model/s
         this.units = []
@@ -47,11 +53,18 @@ export default class Main {
         this.model.load(marioMD2)
         this.manager.onLoad = () => {
             for (let i = 0; i < 3; i++) {
-                let unit = this.model.clone()
+                let unit = new Unit(this.model.mesh.clone())
+                unit.deselect()
+                let anim = new Animation(unit.mesh)
                 unit.position.set(50 * i, 25, 0)
                 this.scene.add(unit)
-                this.units.push(unit)
+                this.units.push({
+                    unit: unit,
+                    anim: anim,
+                    state: 'idle'
+                })
             }
+            new Select(this.raycaster, this.camera, this.scene, this.units)
         }
 
         // adding some light to see the models
@@ -59,10 +72,9 @@ export default class Main {
         l.position.set(0, 100, 0)
         this.scene.add(l)
 
-        // this.raycaster = new Raycaster()
 
-        this.div = document.querySelector('#num')
-        this.prev = document.querySelector('#prev')
+        // this.div = document.querySelector('#num')
+        // this.prev = document.querySelector('#prev')
 
         // this.controls = new OrbitControls(this.camera, this.renderer.domElement)
         this.controls = new MapControls(this.camera, this.renderer.domElement)
@@ -71,6 +83,17 @@ export default class Main {
     }
 
     render() {
+        let delta = this.clock.getDelta()
+        for (let unit of this.units) {
+            unit.unit.update()
+            if (unit.anim) {
+                unit.anim.update(delta)
+                if (unit.anim.animName != 'crstand') unit.anim.playAnim('crstand')
+            }
+        }
+
+
+
 
         // if (Config.moveForward) this.player.translateZ(2)
         // if (Config.moveBackward) this.player.translateZ(-2)
