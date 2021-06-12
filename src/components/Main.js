@@ -50,7 +50,8 @@ export default class Main {
         this.div = document.querySelector('#num')
         this.prev = document.querySelector('#prev')
 
-        const controls = new OrbitControls(this.camera, this.renderer.domElement)
+        this.controls = new OrbitControls(this.camera, this.renderer.domElement)
+
         this.render();
     }
 
@@ -60,6 +61,21 @@ export default class Main {
         if (Config.moveBackward) this.player.translateZ(-2)
         if (Config.rotateRight) this.player.rotation.y -= 0.01
         if (Config.rotateLeft) this.player.rotation.y += 0.01
+
+
+        // Have camera follow player and set orbit controls target
+        if (Config.moveForward || Config.moveBackward || Config.rotateLeft || Config.rotateRight) {
+            const camVect = new Vector3(0, Config.camHeight, -Config.camDistance)
+            const camPos = camVect.applyMatrix4(this.player.matrixWorld);
+            this.camera.position.x = camPos.x
+            this.camera.position.y = camPos.y
+            this.camera.position.z = camPos.z
+            this.camera.lookAt(this.player.position)
+            this.camera.updateProjectionMatrix()
+            // this.camera.rotateZ(this.controls.getPolarAngle())
+            // this.camera.rotateY(this.controls.getAzimuthalAngle())
+        }
+        this.controls.target = this.player.position
 
         for (let box of this.boxes) box.update(this.player)
 
