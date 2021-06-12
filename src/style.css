@@ -1,0 +1,14 @@
+* {
+    margin: 0;
+    padding: 0;
+
+}
+
+#test {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 25px;
+    color: rgb(240, 39, 213);
+    padding: 10px;
+}
