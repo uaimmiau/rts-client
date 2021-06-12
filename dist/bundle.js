@@ -51090,6 +51090,20 @@ MapControls.prototype.constructor = MapControls;
 
 /***/ }),
 
+/***/ "./src/components/assets/mario2.jpg":
+/*!******************************************!*\
+  !*** ./src/components/assets/mario2.jpg ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__webpack_require__.p + "images/b3f89a540205ad30106fff0f9d98176c-mario2.jpg");
+
+/***/ }),
+
 /***/ "./src/components/Box.js":
 /*!*******************************!*\
   !*** ./src/components/Box.js ***!
@@ -51174,7 +51188,9 @@ __webpack_require__.r(__webpack_exports__);
     rotateLeft: false,
     rotateRight: false,
     moveForward: false,
-    moveBackward: false
+    moveBackward: false,
+    camDistance: 100,
+    camHeight: 100
 });
 
 /***/ }),
@@ -51239,6 +51255,499 @@ class Keyboard {
 
 /***/ }),
 
+/***/ "./src/components/MD2Loader.js":
+/*!*************************************!*\
+  !*** ./src/components/MD2Loader.js ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "MD2Loader": () => (/* binding */ MD2Loader)
+/* harmony export */ });
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+
+
+var MD2Loader = function (manager) {
+
+	three__WEBPACK_IMPORTED_MODULE_0__.Loader.call(this, manager);
+
+};
+
+MD2Loader.prototype = Object.assign(Object.create(three__WEBPACK_IMPORTED_MODULE_0__.Loader.prototype), {
+
+	constructor: MD2Loader,
+
+	load: function (url, onLoad, onProgress, onError) {
+
+		var scope = this;
+
+		var loader = new three__WEBPACK_IMPORTED_MODULE_0__.FileLoader(scope.manager);
+		loader.setPath(scope.path);
+		loader.setResponseType('arraybuffer');
+		loader.setRequestHeader(scope.requestHeader);
+		loader.setWithCredentials(scope.withCredentials);
+		loader.load(url, function (buffer) {
+
+			try {
+
+				onLoad(scope.parse(buffer));
+
+			} catch (e) {
+
+				if (onError) {
+
+					onError(e);
+
+				} else {
+
+					console.error(e);
+
+				}
+
+				scope.manager.itemError(url);
+
+			}
+
+		}, onProgress, onError);
+
+	},
+
+	parse: (function () {
+
+		var normalData = [
+			[-0.525731, 0.000000, 0.850651],
+			[-0.442863, 0.238856, 0.864188],
+			[-0.295242, 0.000000, 0.955423],
+			[-0.309017, 0.500000, 0.809017],
+			[-0.162460, 0.262866, 0.951056],
+			[0.000000, 0.000000, 1.000000],
+			[0.000000, 0.850651, 0.525731],
+			[-0.147621, 0.716567, 0.681718],
+			[0.147621, 0.716567, 0.681718],
+			[0.000000, 0.525731, 0.850651],
+			[0.309017, 0.500000, 0.809017],
+			[0.525731, 0.000000, 0.850651],
+			[0.295242, 0.000000, 0.955423],
+			[0.442863, 0.238856, 0.864188],
+			[0.162460, 0.262866, 0.951056],
+			[-0.681718, 0.147621, 0.716567],
+			[-0.809017, 0.309017, 0.500000],
+			[-0.587785, 0.425325, 0.688191],
+			[-0.850651, 0.525731, 0.000000],
+			[-0.864188, 0.442863, 0.238856],
+			[-0.716567, 0.681718, 0.147621],
+			[-0.688191, 0.587785, 0.425325],
+			[-0.500000, 0.809017, 0.309017],
+			[-0.238856, 0.864188, 0.442863],
+			[-0.425325, 0.688191, 0.587785],
+			[-0.716567, 0.681718, -0.147621],
+			[-0.500000, 0.809017, -0.309017],
+			[-0.525731, 0.850651, 0.000000],
+			[0.000000, 0.850651, -0.525731],
+			[-0.238856, 0.864188, -0.442863],
+			[0.000000, 0.955423, -0.295242],
+			[-0.262866, 0.951056, -0.162460],
+			[0.000000, 1.000000, 0.000000],
+			[0.000000, 0.955423, 0.295242],
+			[-0.262866, 0.951056, 0.162460],
+			[0.238856, 0.864188, 0.442863],
+			[0.262866, 0.951056, 0.162460],
+			[0.500000, 0.809017, 0.309017],
+			[0.238856, 0.864188, -0.442863],
+			[0.262866, 0.951056, -0.162460],
+			[0.500000, 0.809017, -0.309017],
+			[0.850651, 0.525731, 0.000000],
+			[0.716567, 0.681718, 0.147621],
+			[0.716567, 0.681718, -0.147621],
+			[0.525731, 0.850651, 0.000000],
+			[0.425325, 0.688191, 0.587785],
+			[0.864188, 0.442863, 0.238856],
+			[0.688191, 0.587785, 0.425325],
+			[0.809017, 0.309017, 0.500000],
+			[0.681718, 0.147621, 0.716567],
+			[0.587785, 0.425325, 0.688191],
+			[0.955423, 0.295242, 0.000000],
+			[1.000000, 0.000000, 0.000000],
+			[0.951056, 0.162460, 0.262866],
+			[0.850651, -0.525731, 0.000000],
+			[0.955423, -0.295242, 0.000000],
+			[0.864188, -0.442863, 0.238856],
+			[0.951056, -0.162460, 0.262866],
+			[0.809017, -0.309017, 0.500000],
+			[0.681718, -0.147621, 0.716567],
+			[0.850651, 0.000000, 0.525731],
+			[0.864188, 0.442863, -0.238856],
+			[0.809017, 0.309017, -0.500000],
+			[0.951056, 0.162460, -0.262866],
+			[0.525731, 0.000000, -0.850651],
+			[0.681718, 0.147621, -0.716567],
+			[0.681718, -0.147621, -0.716567],
+			[0.850651, 0.000000, -0.525731],
+			[0.809017, -0.309017, -0.500000],
+			[0.864188, -0.442863, -0.238856],
+			[0.951056, -0.162460, -0.262866],
+			[0.147621, 0.716567, -0.681718],
+			[0.309017, 0.500000, -0.809017],
+			[0.425325, 0.688191, -0.587785],
+			[0.442863, 0.238856, -0.864188],
+			[0.587785, 0.425325, -0.688191],
+			[0.688191, 0.587785, -0.425325],
+			[-0.147621, 0.716567, -0.681718],
+			[-0.309017, 0.500000, -0.809017],
+			[0.000000, 0.525731, -0.850651],
+			[-0.525731, 0.000000, -0.850651],
+			[-0.442863, 0.238856, -0.864188],
+			[-0.295242, 0.000000, -0.955423],
+			[-0.162460, 0.262866, -0.951056],
+			[0.000000, 0.000000, -1.000000],
+			[0.295242, 0.000000, -0.955423],
+			[0.162460, 0.262866, -0.951056],
+			[-0.442863, -0.238856, -0.864188],
+			[-0.309017, -0.500000, -0.809017],
+			[-0.162460, -0.262866, -0.951056],
+			[0.000000, -0.850651, -0.525731],
+			[-0.147621, -0.716567, -0.681718],
+			[0.147621, -0.716567, -0.681718],
+			[0.000000, -0.525731, -0.850651],
+			[0.309017, -0.500000, -0.809017],
+			[0.442863, -0.238856, -0.864188],
+			[0.162460, -0.262866, -0.951056],
+			[0.238856, -0.864188, -0.442863],
+			[0.500000, -0.809017, -0.309017],
+			[0.425325, -0.688191, -0.587785],
+			[0.716567, -0.681718, -0.147621],
+			[0.688191, -0.587785, -0.425325],
+			[0.587785, -0.425325, -0.688191],
+			[0.000000, -0.955423, -0.295242],
+			[0.000000, -1.000000, 0.000000],
+			[0.262866, -0.951056, -0.162460],
+			[0.000000, -0.850651, 0.525731],
+			[0.000000, -0.955423, 0.295242],
+			[0.238856, -0.864188, 0.442863],
+			[0.262866, -0.951056, 0.162460],
+			[0.500000, -0.809017, 0.309017],
+			[0.716567, -0.681718, 0.147621],
+			[0.525731, -0.850651, 0.000000],
+			[-0.238856, -0.864188, -0.442863],
+			[-0.500000, -0.809017, -0.309017],
+			[-0.262866, -0.951056, -0.162460],
+			[-0.850651, -0.525731, 0.000000],
+			[-0.716567, -0.681718, -0.147621],
+			[-0.716567, -0.681718, 0.147621],
+			[-0.525731, -0.850651, 0.000000],
+			[-0.500000, -0.809017, 0.309017],
+			[-0.238856, -0.864188, 0.442863],
+			[-0.262866, -0.951056, 0.162460],
+			[-0.864188, -0.442863, 0.238856],
+			[-0.809017, -0.309017, 0.500000],
+			[-0.688191, -0.587785, 0.425325],
+			[-0.681718, -0.147621, 0.716567],
+			[-0.442863, -0.238856, 0.864188],
+			[-0.587785, -0.425325, 0.688191],
+			[-0.309017, -0.500000, 0.809017],
+			[-0.147621, -0.716567, 0.681718],
+			[-0.425325, -0.688191, 0.587785],
+			[-0.162460, -0.262866, 0.951056],
+			[0.442863, -0.238856, 0.864188],
+			[0.162460, -0.262866, 0.951056],
+			[0.309017, -0.500000, 0.809017],
+			[0.147621, -0.716567, 0.681718],
+			[0.000000, -0.525731, 0.850651],
+			[0.425325, -0.688191, 0.587785],
+			[0.587785, -0.425325, 0.688191],
+			[0.688191, -0.587785, 0.425325],
+			[-0.955423, 0.295242, 0.000000],
+			[-0.951056, 0.162460, 0.262866],
+			[-1.000000, 0.000000, 0.000000],
+			[-0.850651, 0.000000, 0.525731],
+			[-0.955423, -0.295242, 0.000000],
+			[-0.951056, -0.162460, 0.262866],
+			[-0.864188, 0.442863, -0.238856],
+			[-0.951056, 0.162460, -0.262866],
+			[-0.809017, 0.309017, -0.500000],
+			[-0.864188, -0.442863, -0.238856],
+			[-0.951056, -0.162460, -0.262866],
+			[-0.809017, -0.309017, -0.500000],
+			[-0.681718, 0.147621, -0.716567],
+			[-0.681718, -0.147621, -0.716567],
+			[-0.850651, 0.000000, -0.525731],
+			[-0.688191, 0.587785, -0.425325],
+			[-0.587785, 0.425325, -0.688191],
+			[-0.425325, 0.688191, -0.587785],
+			[-0.425325, -0.688191, -0.587785],
+			[-0.587785, -0.425325, -0.688191],
+			[-0.688191, -0.587785, -0.425325]
+		];
+
+		return function (buffer) {
+
+			var data = new DataView(buffer);
+
+			// http://tfc.duke.free.fr/coding/md2-specs-en.html
+
+			var header = {};
+			var headerNames = [
+				'ident', 'version',
+				'skinwidth', 'skinheight',
+				'framesize',
+				'num_skins', 'num_vertices', 'num_st', 'num_tris', 'num_glcmds', 'num_frames',
+				'offset_skins', 'offset_st', 'offset_tris', 'offset_frames', 'offset_glcmds', 'offset_end'
+			];
+
+			for (var i = 0; i < headerNames.length; i++) {
+
+				header[headerNames[i]] = data.getInt32(i * 4, true);
+
+			}
+
+			if (header.ident !== 844121161 || header.version !== 8) {
+
+				console.error('Not a valid MD2 file');
+				return;
+
+			}
+
+			if (header.offset_end !== data.byteLength) {
+
+				console.error('Corrupted MD2 file');
+				return;
+
+			}
+
+			//
+
+			var geometry = new three__WEBPACK_IMPORTED_MODULE_0__.BufferGeometry();
+
+			// uvs
+
+			var uvsTemp = [];
+			var offset = header.offset_st;
+
+			for (var i = 0, l = header.num_st; i < l; i++) {
+
+				var u = data.getInt16(offset + 0, true);
+				var v = data.getInt16(offset + 2, true);
+
+				uvsTemp.push(u / header.skinwidth, 1 - (v / header.skinheight));
+
+				offset += 4;
+
+			}
+
+			// triangles
+
+			offset = header.offset_tris;
+
+			var vertexIndices = [];
+			var uvIndices = [];
+
+			for (var i = 0, l = header.num_tris; i < l; i++) {
+
+				vertexIndices.push(
+					data.getUint16(offset + 0, true),
+					data.getUint16(offset + 2, true),
+					data.getUint16(offset + 4, true)
+				);
+
+				uvIndices.push(
+					data.getUint16(offset + 6, true),
+					data.getUint16(offset + 8, true),
+					data.getUint16(offset + 10, true)
+				);
+
+				offset += 12;
+
+			}
+
+			// frames
+
+			var translation = new three__WEBPACK_IMPORTED_MODULE_0__.Vector3();
+			var scale = new three__WEBPACK_IMPORTED_MODULE_0__.Vector3();
+
+			var frames = [];
+
+			offset = header.offset_frames;
+
+			for (var i = 0, l = header.num_frames; i < l; i++) {
+
+				scale.set(
+					data.getFloat32(offset + 0, true),
+					data.getFloat32(offset + 4, true),
+					data.getFloat32(offset + 8, true)
+				);
+
+				translation.set(
+					data.getFloat32(offset + 12, true),
+					data.getFloat32(offset + 16, true),
+					data.getFloat32(offset + 20, true)
+				);
+
+				offset += 24;
+
+				var string = [];
+
+				for (var j = 0; j < 16; j++) {
+
+					var character = data.getUint8(offset + j, true);
+					if (character === 0) break;
+
+					string[j] = character;
+
+				}
+
+				var frame = {
+					name: String.fromCharCode.apply(null, string),
+					vertices: [],
+					normals: []
+				};
+
+				offset += 16;
+
+				for (var j = 0; j < header.num_vertices; j++) {
+
+					var x = data.getUint8(offset++, true);
+					var y = data.getUint8(offset++, true);
+					var z = data.getUint8(offset++, true);
+					var n = normalData[data.getUint8(offset++, true)];
+
+					x = x * scale.x + translation.x;
+					y = y * scale.y + translation.y;
+					z = z * scale.z + translation.z;
+
+					frame.vertices.push(x, z, y); // convert to Y-up
+					frame.normals.push(n[0], n[2], n[1]); // convert to Y-up
+
+				}
+
+				frames.push(frame);
+
+			}
+
+			// static
+
+			var positions = [];
+			var normals = [];
+			var uvs = [];
+
+			var verticesTemp = frames[0].vertices;
+			var normalsTemp = frames[0].normals;
+
+			for (var i = 0, l = vertexIndices.length; i < l; i++) {
+
+				var vertexIndex = vertexIndices[i];
+				var stride = vertexIndex * 3;
+
+				//
+
+				var x = verticesTemp[stride];
+				var y = verticesTemp[stride + 1];
+				var z = verticesTemp[stride + 2];
+
+				positions.push(x, y, z);
+
+				//
+
+				var nx = normalsTemp[stride];
+				var ny = normalsTemp[stride + 1];
+				var nz = normalsTemp[stride + 2];
+
+				normals.push(nx, ny, nz);
+
+				//
+
+				var uvIndex = uvIndices[i];
+				stride = uvIndex * 2;
+
+				var u = uvsTemp[stride];
+				var v = uvsTemp[stride + 1];
+
+				uvs.push(u, v);
+
+			}
+
+			geometry.setAttribute('position', new three__WEBPACK_IMPORTED_MODULE_0__.Float32BufferAttribute(positions, 3));
+			geometry.setAttribute('normal', new three__WEBPACK_IMPORTED_MODULE_0__.Float32BufferAttribute(normals, 3));
+			geometry.setAttribute('uv', new three__WEBPACK_IMPORTED_MODULE_0__.Float32BufferAttribute(uvs, 2));
+
+			// animation
+
+			var morphPositions = [];
+			var morphNormals = [];
+
+			for (var i = 0, l = frames.length; i < l; i++) {
+
+				var frame = frames[i];
+				var attributeName = frame.name;
+
+				if (frame.vertices.length > 0) {
+
+					var positions = [];
+
+					for (var j = 0, jl = vertexIndices.length; j < jl; j++) {
+
+						var vertexIndex = vertexIndices[j];
+						var stride = vertexIndex * 3;
+
+						var x = frame.vertices[stride];
+						var y = frame.vertices[stride + 1];
+						var z = frame.vertices[stride + 2];
+
+						positions.push(x, y, z);
+
+					}
+
+					var positionAttribute = new three__WEBPACK_IMPORTED_MODULE_0__.Float32BufferAttribute(positions, 3);
+					positionAttribute.name = attributeName;
+
+					morphPositions.push(positionAttribute);
+
+				}
+
+				if (frame.normals.length > 0) {
+
+					var normals = [];
+
+					for (var j = 0, jl = vertexIndices.length; j < jl; j++) {
+
+						var vertexIndex = vertexIndices[j];
+						var stride = vertexIndex * 3;
+
+						var nx = frame.normals[stride];
+						var ny = frame.normals[stride + 1];
+						var nz = frame.normals[stride + 2];
+
+						normals.push(nx, ny, nz);
+
+					}
+
+					var normalAttribute = new three__WEBPACK_IMPORTED_MODULE_0__.Float32BufferAttribute(normals, 3);
+					normalAttribute.name = attributeName;
+
+					morphNormals.push(normalAttribute);
+
+				}
+
+			}
+
+			geometry.morphAttributes.position = morphPositions;
+			geometry.morphAttributes.normal = morphNormals;
+			geometry.morphTargetsRelative = false;
+
+			geometry.animations = three__WEBPACK_IMPORTED_MODULE_0__.AnimationClip.CreateClipsFromMorphTargetSequences(frames, 10);
+
+			return geometry;
+
+		};
+
+	})()
+
+});
+
+
+
+/***/ }),
+
 /***/ "./src/components/Main.js":
 /*!********************************!*\
   !*** ./src/components/Main.js ***!
@@ -51249,14 +51758,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ Main)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
 /* harmony import */ var _Renderer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Renderer */ "./src/components/Renderer.js");
 /* harmony import */ var _Camera__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Camera */ "./src/components/Camera.js");
 /* harmony import */ var _Config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Config */ "./src/components/Config.js");
 /* harmony import */ var _Player__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Player */ "./src/components/Player.js");
-/* harmony import */ var three_examples_jsm_controls_OrbitControls_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! three/examples/jsm/controls/OrbitControls.js */ "./node_modules/three/examples/jsm/controls/OrbitControls.js");
+/* harmony import */ var three_examples_jsm_controls_OrbitControls_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! three/examples/jsm/controls/OrbitControls.js */ "./node_modules/three/examples/jsm/controls/OrbitControls.js");
 /* harmony import */ var _Keyboard__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Keyboard */ "./src/components/Keyboard.js");
 /* harmony import */ var _Box__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Box */ "./src/components/Box.js");
+/* harmony import */ var _Model__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Model */ "./src/components/Model.js");
+/* harmony import */ var _assets_mario_md2__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./assets/mario.md2 */ "./src/components/assets/mario.md2");
 
 
 
@@ -51268,15 +51779,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 class Main {
     constructor(container) {
         this.container = container
-        this.scene = new three__WEBPACK_IMPORTED_MODULE_6__.Scene()
+        this.scene = new three__WEBPACK_IMPORTED_MODULE_8__.Scene()
         this.renderer = new _Renderer__WEBPACK_IMPORTED_MODULE_0__.default(container)
         this.camera = new _Camera__WEBPACK_IMPORTED_MODULE_1__.default(75, window.innerWidth, window.innerHeight)
         this.camera.position.set(100, 100, 100)
-        this.camera.lookAt(new three__WEBPACK_IMPORTED_MODULE_6__.Vector3(0, 0, 0))
-        this.grid = new three__WEBPACK_IMPORTED_MODULE_6__.GridHelper(1000, 10)
+        this.camera.lookAt(new three__WEBPACK_IMPORTED_MODULE_8__.Vector3(0, 0, 0))
+        this.grid = new three__WEBPACK_IMPORTED_MODULE_8__.GridHelper(1000, 10)
         this.scene.add(this.grid)
 
         this.player = new _Player__WEBPACK_IMPORTED_MODULE_3__.default()
@@ -51285,20 +51797,22 @@ class Main {
 
         this.keybord = new _Keyboard__WEBPACK_IMPORTED_MODULE_4__.default(window)
 
-        this.boxes = []
-        for (let i = 0; i < 20; i++) {
-            let box = new _Box__WEBPACK_IMPORTED_MODULE_5__.default(this.player)
-            box.position.set(Math.random() * 400 - 200, 13, Math.random() * 400 - 200)
-            this.scene.add(box)
-            this.boxes.push(box)
+        // Load unit model/s
+        this.manager = new three__WEBPACK_IMPORTED_MODULE_8__.LoadingManager()
+        this.model = new _Model__WEBPACK_IMPORTED_MODULE_6__.default(this.manager)
+        this.model.load(_assets_mario_md2__WEBPACK_IMPORTED_MODULE_7__)
+        this.manager.onLoad = () => {
+            let unit = this.model.clone()
+            this.scene.add(unit)
         }
 
-        this.raycaster = new three__WEBPACK_IMPORTED_MODULE_6__.Raycaster()
+        // this.raycaster = new Raycaster()
 
         this.div = document.querySelector('#num')
         this.prev = document.querySelector('#prev')
 
-        const controls = new three_examples_jsm_controls_OrbitControls_js__WEBPACK_IMPORTED_MODULE_7__.OrbitControls(this.camera, this.renderer.domElement)
+        this.controls = new three_examples_jsm_controls_OrbitControls_js__WEBPACK_IMPORTED_MODULE_9__.OrbitControls(this.camera, this.renderer.domElement)
+
         this.render();
     }
 
@@ -51309,28 +51823,84 @@ class Main {
         if (_Config__WEBPACK_IMPORTED_MODULE_2__.default.rotateRight) this.player.rotation.y -= 0.01
         if (_Config__WEBPACK_IMPORTED_MODULE_2__.default.rotateLeft) this.player.rotation.y += 0.01
 
-        for (let box of this.boxes) box.update(this.player)
 
-
-
-        let ray = new three__WEBPACK_IMPORTED_MODULE_6__.Ray(this.player.position, this.player.getWorldDirection(new three__WEBPACK_IMPORTED_MODULE_6__.Vector3()))
-        this.raycaster.ray = ray
-        let intersects = this.raycaster.intersectObjects(this.boxes)
-        this.div.innerHTML = `Trafionych celów: ${intersects.length}`
-        this.prev.innerHTML = ''
-        if (intersects.length != 0) {
-            for (let inter of intersects) {
-                inter.object.changeColor()
-                let obj = {
-                    distance: inter.distance,
-                    point: inter.point
-                }
-                this.prev.innerHTML += JSON.stringify(obj, null, 4)
-            }
+        // Have camera follow player and set orbit controls target
+        if (_Config__WEBPACK_IMPORTED_MODULE_2__.default.moveForward || _Config__WEBPACK_IMPORTED_MODULE_2__.default.moveBackward || _Config__WEBPACK_IMPORTED_MODULE_2__.default.rotateLeft || _Config__WEBPACK_IMPORTED_MODULE_2__.default.rotateRight) {
+            const camVect = new three__WEBPACK_IMPORTED_MODULE_8__.Vector3(0, _Config__WEBPACK_IMPORTED_MODULE_2__.default.camHeight, -_Config__WEBPACK_IMPORTED_MODULE_2__.default.camDistance)
+            const camPos = camVect.applyMatrix4(this.player.matrixWorld);
+            this.camera.position.x = camPos.x
+            this.camera.position.y = camPos.y
+            this.camera.position.z = camPos.z
+            this.camera.lookAt(this.player.position)
+            this.camera.updateProjectionMatrix()
+            // this.camera.rotateZ(this.controls.getPolarAngle())
+            // this.camera.rotateY(this.controls.getAzimuthalAngle())
         }
+        this.controls.target = this.player.position
+
+
+
+
+        // let ray = new Ray(this.player.position, this.player.getWorldDirection(new Vector3()))
+        // this.raycaster.ray = ray
+        // let intersects = this.raycaster.intersectObjects(this.boxes)
+        // this.div.innerHTML = `Trafionych celów: ${intersects.length}`
+        // this.prev.innerHTML = ''
+        // if (intersects.length != 0) {
+        //     for (let inter of intersects) {
+        //         inter.object.changeColor()
+        //         let obj = {
+        //             distance: inter.distance,
+        //             point: inter.point
+        //         }
+        //         this.prev.innerHTML += JSON.stringify(obj, null, 4)
+        //     }
+        // }
 
         this.renderer.render(this.scene, this.camera);
         requestAnimationFrame(this.render.bind(this));
+    }
+}
+
+/***/ }),
+
+/***/ "./src/components/Model.js":
+/*!*********************************!*\
+  !*** ./src/components/Model.js ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Model)
+/* harmony export */ });
+/* harmony import */ var _MD2Loader__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./MD2Loader */ "./src/components/MD2Loader.js");
+/* harmony import */ var _assets_mario2_jpg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./assets/mario2.jpg */ "./src/components/assets/mario2.jpg");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+
+
+
+
+class Model extends three__WEBPACK_IMPORTED_MODULE_2__.Object3D {
+    constructor(manager) {
+        super()
+        this.manager = manager
+        this.mesh = null
+        this.geometry = null
+    }
+
+    load(path) {
+        new _MD2Loader__WEBPACK_IMPORTED_MODULE_0__.MD2Loader(this.manager).load(
+            path,
+            geometry => {
+                this.geometry = geometry;
+                this.mesh = new three__WEBPACK_IMPORTED_MODULE_2__.Mesh(geometry, new three__WEBPACK_IMPORTED_MODULE_2__.MeshPhongMaterial({
+                    map: new three__WEBPACK_IMPORTED_MODULE_2__.TextureLoader().load(_assets_mario2_jpg__WEBPACK_IMPORTED_MODULE_1__.default),
+                    morphTargets: true
+                }))
+                this.add(this.mesh)
+            },
+        );
     }
 }
 
@@ -51401,6 +51971,16 @@ class Renderer extends three__WEBPACK_IMPORTED_MODULE_0__.WebGLRenderer {
     }
 }
 
+/***/ }),
+
+/***/ "./src/components/assets/mario.md2":
+/*!*****************************************!*\
+  !*** ./src/components/assets/mario.md2 ***!
+  \*****************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+module.exports = __webpack_require__.p + "b65b3848dbd82c7be2c0.md2";
+
 /***/ })
 
 /******/ 	});
@@ -51454,6 +52034,18 @@ class Renderer extends three__WEBPACK_IMPORTED_MODULE_0__.WebGLRenderer {
 /******/ 		};
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/global */
+/******/ 	(() => {
+/******/ 		__webpack_require__.g = (function() {
+/******/ 			if (typeof globalThis === 'object') return globalThis;
+/******/ 			try {
+/******/ 				return this || new Function('return this')();
+/******/ 			} catch (e) {
+/******/ 				if (typeof window === 'object') return window;
+/******/ 			}
+/******/ 		})();
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
@@ -51468,6 +52060,26 @@ class Renderer extends three__WEBPACK_IMPORTED_MODULE_0__.WebGLRenderer {
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/publicPath */
+/******/ 	(() => {
+/******/ 		var scriptUrl;
+/******/ 		if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
+/******/ 		var document = __webpack_require__.g.document;
+/******/ 		if (!scriptUrl && document) {
+/******/ 			if (document.currentScript)
+/******/ 				scriptUrl = document.currentScript.src
+/******/ 			if (!scriptUrl) {
+/******/ 				var scripts = document.getElementsByTagName("script");
+/******/ 				if(scripts.length) scriptUrl = scripts[scripts.length - 1].src
+/******/ 			}
+/******/ 		}
+/******/ 		// When supporting browsers where an automatic publicPath is not supported you must specify an output.publicPath manually via configuration
+/******/ 		// or pass an empty string ("") and set the __webpack_public_path__ variable from your code to use your own logic.
+/******/ 		if (!scriptUrl) throw new Error("Automatic publicPath is not supported in this browser");
+/******/ 		scriptUrl = scriptUrl.replace(/#.*$/, "").replace(/\?.*$/, "").replace(/\/[^\/]+$/, "/");
+/******/ 		__webpack_require__.p = scriptUrl;
 /******/ 	})();
 /******/ 	
 /************************************************************************/
