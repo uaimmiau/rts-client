@@ -16,8 +16,11 @@ export default class Select {
             this.raycaster.setFromCamera(mouseVector, this.camera)
             let intersects = this.raycaster.intersectObjects(this.scene.children, true)
             if (intersects.length > 0 && intersects[0].object.type == 'Mesh') {
+                const parent = intersects[0].object.parent
+                const selected = parent.selected
                 this.deselectAllUnits()
-                intersects[0].object.parent.select()
+                parent.select()
+                if (selected) parent.deselect()
             }
         })
     }

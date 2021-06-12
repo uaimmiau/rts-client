@@ -51104,6 +51104,40 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./src/components/Animation.js":
+/*!*************************************!*\
+  !*** ./src/components/Animation.js ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Animation)
+/* harmony export */ });
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+
+
+class Animation {
+    constructor(mesh) {
+        this.mesh = mesh
+        this.mixer = new three__WEBPACK_IMPORTED_MODULE_0__.AnimationMixer(this.mesh)
+    }
+
+    playAnim(animName) {
+        this.animName = animName
+        this.mixer.uncacheRoot(this.mesh)
+        this.mixer.clipAction(this.animName).play()
+    }
+
+    update(delta) {
+        if (this.mixer) {
+            this.mixer.update(delta);
+        }
+    }
+}
+
+/***/ }),
+
 /***/ "./src/components/Box.js":
 /*!*******************************!*\
   !*** ./src/components/Box.js ***!
@@ -51193,7 +51227,7 @@ __webpack_require__.r(__webpack_exports__);
     camHeight: 100,
     lookX: 0,
     lookZ: 0,
-
+    selected: null
 });
 
 /***/ }),
@@ -51795,17 +51829,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ Main)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
 /* harmony import */ var _Renderer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Renderer */ "./src/components/Renderer.js");
 /* harmony import */ var _Camera__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Camera */ "./src/components/Camera.js");
 /* harmony import */ var _Light__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Light */ "./src/components/Light.js");
 /* harmony import */ var _Config__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Config */ "./src/components/Config.js");
 /* harmony import */ var _Player__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Player */ "./src/components/Player.js");
-/* harmony import */ var three_examples_jsm_controls_OrbitControls_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! three/examples/jsm/controls/OrbitControls.js */ "./node_modules/three/examples/jsm/controls/OrbitControls.js");
+/* harmony import */ var three_examples_jsm_controls_OrbitControls_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! three/examples/jsm/controls/OrbitControls.js */ "./node_modules/three/examples/jsm/controls/OrbitControls.js");
 /* harmony import */ var _Keyboard__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Keyboard */ "./src/components/Keyboard.js");
 /* harmony import */ var _Box__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Box */ "./src/components/Box.js");
 /* harmony import */ var _Model__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Model */ "./src/components/Model.js");
 /* harmony import */ var _assets_mario_md2__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./assets/mario.md2 */ "./src/components/assets/mario.md2");
+/* harmony import */ var _Animation__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Animation */ "./src/components/Animation.js");
+/* harmony import */ var _Unit__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Unit */ "./src/components/Unit.js");
+/* harmony import */ var _Select__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Select */ "./src/components/Select.js");
 
 
 
@@ -51819,37 +51856,48 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
 class Main {
     constructor(container) {
         this.container = container
-        this.scene = new three__WEBPACK_IMPORTED_MODULE_9__.Scene()
+        this.scene = new three__WEBPACK_IMPORTED_MODULE_12__.Scene()
         this.renderer = new _Renderer__WEBPACK_IMPORTED_MODULE_0__.default(container)
         this.camera = new _Camera__WEBPACK_IMPORTED_MODULE_1__.default(75, window.innerWidth, window.innerHeight)
         this.camera.position.set(100, 100, 100)
-        this.camera.lookAt(new three__WEBPACK_IMPORTED_MODULE_9__.Vector3(0, 0, 0))
-        this.grid = new three__WEBPACK_IMPORTED_MODULE_9__.GridHelper(1000, 10)
+        this.camera.lookAt(new three__WEBPACK_IMPORTED_MODULE_12__.Vector3(0, 0, 0))
+        this.grid = new three__WEBPACK_IMPORTED_MODULE_12__.GridHelper(1000, 10)
         this.scene.add(this.grid)
 
         // this.player = new Player()
         // this.player.position.set(0, 10, 0)
         // this.scene.add(this.player)
         this.keybord = new _Keyboard__WEBPACK_IMPORTED_MODULE_5__.default(window)
+        this.raycaster = new three__WEBPACK_IMPORTED_MODULE_12__.Raycaster()
 
         // C(l)ock
-        this.clock = new three__WEBPACK_IMPORTED_MODULE_9__.Clock()
+        this.clock = new three__WEBPACK_IMPORTED_MODULE_12__.Clock()
 
         // Load unit model/s
         this.units = []
-        this.manager = new three__WEBPACK_IMPORTED_MODULE_9__.LoadingManager()
+        this.manager = new three__WEBPACK_IMPORTED_MODULE_12__.LoadingManager()
         this.model = new _Model__WEBPACK_IMPORTED_MODULE_7__.default(this.manager)
         this.model.load(_assets_mario_md2__WEBPACK_IMPORTED_MODULE_8__)
         this.manager.onLoad = () => {
             for (let i = 0; i < 3; i++) {
-                let unit = this.model.clone()
+                let unit = new _Unit__WEBPACK_IMPORTED_MODULE_10__.default(this.model.mesh.clone())
+                unit.deselect()
+                let anim = new _Animation__WEBPACK_IMPORTED_MODULE_9__.default(unit.mesh)
                 unit.position.set(50 * i, 25, 0)
                 this.scene.add(unit)
-                this.units.push(unit)
+                this.units.push({
+                    unit: unit,
+                    anim: anim,
+                    state: 'idle'
+                })
             }
+            new _Select__WEBPACK_IMPORTED_MODULE_11__.default(this.raycaster, this.camera, this.scene, this.units)
         }
 
         // adding some light to see the models
@@ -51857,20 +51905,25 @@ class Main {
         l.position.set(0, 100, 0)
         this.scene.add(l)
 
-        // this.raycaster = new Raycaster()
 
         // this.div = document.querySelector('#num')
         // this.prev = document.querySelector('#prev')
 
         // this.controls = new OrbitControls(this.camera, this.renderer.domElement)
-        this.controls = new three_examples_jsm_controls_OrbitControls_js__WEBPACK_IMPORTED_MODULE_10__.MapControls(this.camera, this.renderer.domElement)
+        this.controls = new three_examples_jsm_controls_OrbitControls_js__WEBPACK_IMPORTED_MODULE_13__.MapControls(this.camera, this.renderer.domElement)
 
         this.render();
     }
 
     render() {
         let delta = this.clock.getDelta()
-        // todo: update all animations with delta
+        for (let unit of this.units) {
+            unit.unit.update()
+            if (unit.anim) {
+                unit.anim.update(delta)
+                if (unit.anim.animName != 'crstand') unit.anim.playAnim('crstand')
+            }
+        }
 
 
 
@@ -52026,6 +52079,106 @@ class Renderer extends three__WEBPACK_IMPORTED_MODULE_0__.WebGLRenderer {
 
     updateSize() {
         this.setSize(window.innerWidth, window.innerHeight);
+    }
+}
+
+/***/ }),
+
+/***/ "./src/components/Select.js":
+/*!**********************************!*\
+  !*** ./src/components/Select.js ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Select)
+/* harmony export */ });
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+
+
+class Select {
+    constructor(raycaster, camera, scene, units) {
+        this.raycaster = raycaster
+        this.camera = camera
+        this.scene = scene
+        this.units = units
+        let mouseVector = new three__WEBPACK_IMPORTED_MODULE_0__.Vector2()
+
+        document.addEventListener('click', (e) => {
+            mouseVector.x = (e.clientX / window.innerWidth) * 2 - 1
+            mouseVector.y = -(e.clientY / window.innerHeight) * 2 + 1
+            this.raycaster.setFromCamera(mouseVector, this.camera)
+            let intersects = this.raycaster.intersectObjects(this.scene.children, true)
+            if (intersects.length > 0 && intersects[0].object.type == 'Mesh') {
+                const parent = intersects[0].object.parent
+                const selected = parent.selected
+                this.deselectAllUnits()
+                parent.select()
+                if (selected) parent.deselect()
+            }
+        })
+    }
+
+    deselectAllUnits() {
+        for (let unit of this.units) {
+            unit.unit.deselect()
+        }
+    }
+}
+
+/***/ }),
+
+/***/ "./src/components/Unit.js":
+/*!********************************!*\
+  !*** ./src/components/Unit.js ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Unit)
+/* harmony export */ });
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var _Config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Config */ "./src/components/Config.js");
+
+
+
+class Unit extends three__WEBPACK_IMPORTED_MODULE_1__.Object3D {
+    constructor(mesh) {
+        super()
+        this.mesh = mesh
+        this.add(this.mesh)
+        this.marker = new three__WEBPACK_IMPORTED_MODULE_1__.Mesh(new three__WEBPACK_IMPORTED_MODULE_1__.OctahedronGeometry(5), new three__WEBPACK_IMPORTED_MODULE_1__.MeshNormalMaterial({
+            side: three__WEBPACK_IMPORTED_MODULE_1__.DoubleSide
+        }))
+        this.marker.position.y = 25
+        this.add(this.marker)
+        this.selected = false
+    }
+
+    select() {
+        this.marker.visible = true
+        _Config__WEBPACK_IMPORTED_MODULE_0__.default.selected = this
+        this.selected = true
+    }
+
+    deselect() {
+        this.marker.visible = false
+        _Config__WEBPACK_IMPORTED_MODULE_0__.default.selected = null
+        this.selected = false
+    }
+
+    update() {
+        this.marker.rotation.y += 0.01
+    }
+
+    invertSelect() {
+        if (this.selected) {
+            this.deselect()
+        } else {
+            this.select()
+        }
     }
 }
 
