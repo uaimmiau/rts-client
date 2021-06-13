@@ -6,7 +6,11 @@ import {
     GridHelper,
     PointLight,
     Raycaster,
-    Ray
+    Ray,
+    PlaneGeometry,
+    MeshBasicMaterial,
+    DoubleSide,
+    Mesh
 } from 'three'
 import Renderer from './Renderer'
 import Camera from './Camera'
@@ -25,6 +29,8 @@ import marioMD2 from "./assets/mario.md2"
 import Animation from './Animation'
 import Unit from './Unit'
 import Select from './Select'
+import ClientSocket from './communication/ClientSocket'
+import GameEvents from './communication/GameEvents'
 
 export default class Main {
     constructor(container) {
@@ -36,6 +42,16 @@ export default class Main {
         this.camera.lookAt(new Vector3(0, 0, 0))
         this.grid = new GridHelper(1000, 10)
         this.scene.add(this.grid)
+
+        let geometry = new PlaneGeometry(1000, 1000);
+        let material = new MeshBasicMaterial({ color: 0x65C9EA, side: DoubleSide });
+
+        let plane = new Mesh(geometry, material);
+        this.plane = plane;
+        this.scene.add(this.plane);
+        this.plane.position.y = -1;
+        this.plane.rotateX(Math.PI / 2);
+
 
         // this.player = new Player()
         // this.player.position.set(0, 10, 0)
@@ -52,19 +68,42 @@ export default class Main {
         this.model = new Model(this.manager)
         this.model.load(marioMD2)
         this.manager.onLoad = () => {
-            for (let i = 0; i < 3; i++) {
-                let unit = new Unit(this.model.mesh.clone())
-                unit.deselect()
-                let anim = new Animation(unit.mesh)
-                unit.position.set(50 * i, 25, 0)
-                this.scene.add(unit)
+            // for (let i = 0; i < 3; i++) {
+            //     let unit = new Unit(this.model.mesh.clone())
+            //     unit.deselect();
+            //     let anim = new Animation(unit.mesh);
+            //     unit.position.set(50 * i, 25, 0)
+            //     this.scene.add(unit);
+            //     this.units.push({
+            //         unit: unit,
+            //         anim: anim,
+            //         state: 'idle'
+            //     });
+            // }
+
+            // Websocket
+            this.websocket = new ClientSocket('ws://localhost:4567/socket');
+
+            // Get nickname from server
+            this.websocket.addEventListener(GameEvents.NICKNAME_ASSIGN, ({ nickname }) => {
+                this.nickname = nickname;
+                console.log(`Assigned nickname: ${nickname}`);
+            });
+
+            this.websocket.addEventListener(GameEvents.SPAWN_UNIT, ({ globalId, type, position }) => {
+                let unit = new Unit(this.model.mesh.clone(), globalId, type);
+                unit.deselect();
+                let anim = new Animation(unit.mesh);
+                unit.position.set(position.x, position.y, position.z);
+                this.scene.add(unit);
                 this.units.push({
                     unit: unit,
                     anim: anim,
                     state: 'idle'
-                })
-            }
-            new Select(this.raycaster, this.camera, this.scene, this.units)
+                });
+            });
+
+            new Select(this.raycaster, this.camera, this.scene, this.units, this.websocket, this.plane);
         }
 
         // adding some light to see the models

@@ -4,17 +4,17 @@
   "description": "",
   "main": "webpack.config.js",
   "dependencies": {
+    "three": "^0.126.0"
+  },
+  "devDependencies": {
     "css-loader": "^5.2.1",
+    "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.3.1",
     "style-loader": "^2.0.0",
+    "url-loader": "^4.1.1",
     "webpack": "^5.33.2",
     "webpack-cli": "^4.6.0",
     "webpack-dev-server": "^3.11.2"
-  },
-  "devDependencies": {
-    "file-loader": "^6.2.0",
-    "three": "^0.126.0",
-    "url-loader": "^4.1.1"
   },
   "scripts": {
     "build": "webpack",
