@@ -1,5 +1,5 @@
 export default {
-    NICKNAME_ASSIGN: 'nicknameAssign',
+    PLAYER_HANDSHAKE: 'playerHandshake',
     MOVE_UNIT: 'moveUnit',
     SPAWN_UNIT: 'spawnUnit',
 }

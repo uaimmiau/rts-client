@@ -32,6 +32,7 @@ import Unit from './Unit'
 import Select from './Select'
 import ClientSocket from './communication/ClientSocket'
 import GameEvents from './communication/GameEvents'
+import Cookies from 'js-cookie'
 
 export default class Main {
     constructor(container) {
@@ -73,19 +74,26 @@ export default class Main {
             this.websocket = new ClientSocket('ws://localhost:4567/socket');
 
             // Get nickname from server
-            this.websocket.addEventListener(GameEvents.NICKNAME_ASSIGN, ({
-                nickname
+            this.websocket.addEventListener(GameEvents.PLAYER_HANDSHAKE, ({
+                nickname,
+                playerId,
+                sessionId,
+                sessIdCookieName,
             }) => {
                 this.nickname = nickname;
                 console.log(`Assigned nickname: ${nickname}`);
+                Cookies.set(sessIdCookieName, sessionId);
+                console.log(`Assigned sessionId: ${sessionId}`);
             });
 
             this.websocket.addEventListener(GameEvents.SPAWN_UNIT, ({
+                playerId,
                 globalId,
                 type,
-                position
+                position,
+                destination,
             }) => {
-                let unit = new Unit(this.model.mesh.clone(), globalId, type);
+                let unit = new Unit(this.model.mesh.clone(), playerId, globalId, type);
                 unit.deselect();
                 let anim = new Animation(unit.mesh);
                 unit.position.set(position.x, position.y, position.z);

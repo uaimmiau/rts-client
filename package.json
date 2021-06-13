@@ -4,6 +4,7 @@
   "description": "",
   "main": "webpack.config.js",
   "dependencies": {
+    "js-cookie": "^2.2.1",
     "three": "^0.126.0"
   },
   "devDependencies": {

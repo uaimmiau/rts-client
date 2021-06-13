@@ -10,9 +10,10 @@ import {
 import Config from "./Config";
 
 export default class Unit extends Object3D {
-    constructor(mesh, globalId, type) {
+    constructor(mesh, playerId, globalId, type) {
         super();
         this.mesh = mesh;
+        this.playerId = playerId;
         this.globalId = globalId;
         this.type = type;
         this.destination = null;
@@ -64,13 +65,6 @@ export default class Unit extends Object3D {
         this.stepV = stepV2
         this.mesh.rotation.y = (-stepV2.angle())
     }
-
-
-
-
-
-
-
 
     invertSelect() {
         if (this.selected) {
