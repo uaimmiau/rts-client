@@ -1,6 +1,8 @@
 import {
-    Vector2
+    Vector2,
+    Vector3
 } from "three"
+import Config from "../../../projekt fps/three/src/components/Config";
 import GameEvents from "./communication/GameEvents";
 
 export default class Select {
@@ -27,12 +29,21 @@ export default class Select {
                         y: Math.round(point.y),
                         z: Math.round(point.z),
                     };
+                    let i = this.units.map((unit) => unit.unit).filter((unit) => unit.selected).length
                     // Send order to the server
                     this.units.map((unit) => unit.unit).filter((unit) => unit.selected).forEach((selectedUnit) => {
+                        destination.x += (Math.random() * 16 * i - 8 * i)
+                        destination.z += (Math.random() * 16 * i - 8 * i)
                         this.websocket.sendData(GameEvents.MOVE_UNIT, {
                             globalId: selectedUnit.globalId,
                             destination
                         });
+                        // Calculate the path, steps and start moving the unit
+                        selectedUnit.destination = destination
+                        selectedUnit.calculatePath()
+                        // Deselect after issuing order
+                        selectedUnit.deselect()
+                        i++
                     });
                 } else {
                     const parent = intersects[0].object.parent;

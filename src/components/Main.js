@@ -44,7 +44,10 @@ export default class Main {
         this.scene.add(this.grid)
 
         let geometry = new PlaneGeometry(1000, 1000);
-        let material = new MeshBasicMaterial({ color: 0x65C9EA, side: DoubleSide });
+        let material = new MeshBasicMaterial({
+            color: 0x65C9EA,
+            side: DoubleSide
+        });
 
         let plane = new Mesh(geometry, material);
         this.plane = plane;
@@ -85,12 +88,18 @@ export default class Main {
             this.websocket = new ClientSocket('ws://localhost:4567/socket');
 
             // Get nickname from server
-            this.websocket.addEventListener(GameEvents.NICKNAME_ASSIGN, ({ nickname }) => {
+            this.websocket.addEventListener(GameEvents.NICKNAME_ASSIGN, ({
+                nickname
+            }) => {
                 this.nickname = nickname;
                 console.log(`Assigned nickname: ${nickname}`);
             });
 
-            this.websocket.addEventListener(GameEvents.SPAWN_UNIT, ({ globalId, type, position }) => {
+            this.websocket.addEventListener(GameEvents.SPAWN_UNIT, ({
+                globalId,
+                type,
+                position
+            }) => {
                 let unit = new Unit(this.model.mesh.clone(), globalId, type);
                 unit.deselect();
                 let anim = new Animation(unit.mesh);
@@ -127,7 +136,8 @@ export default class Main {
             unit.unit.update()
             if (unit.anim) {
                 unit.anim.update(delta)
-                if (unit.anim.animName != 'crstand') unit.anim.playAnim('crstand')
+                if (unit.unit.state == 'idle' && unit.anim.animName != 'crstand') unit.anim.playAnim('crstand')
+                if (unit.unit.state == 'moving' && unit.anim.animName != 'crwalk') unit.anim.playAnim('crwalk')
             }
         }
 

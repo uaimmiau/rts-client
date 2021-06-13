@@ -4,7 +4,8 @@ import {
     MeshBasicMaterial,
     MeshNormalMaterial,
     Object3D,
-    OctahedronGeometry
+    OctahedronGeometry,
+    Vector2
 } from "three";
 import Config from "./Config";
 
@@ -15,6 +16,7 @@ export default class Unit extends Object3D {
         this.globalId = globalId;
         this.type = type;
         this.destination = null;
+        this.speed = 0.8;
         this.add(this.mesh)
         this.marker = new Mesh(new OctahedronGeometry(5), new MeshNormalMaterial({
             side: DoubleSide
@@ -22,6 +24,9 @@ export default class Unit extends Object3D {
         this.marker.position.y = 25;
         this.add(this.marker);
         this.selected = false;
+        this.steps = 0
+        this.stepV = null
+        this.state = 'idle'
     }
 
     select() {
@@ -38,7 +43,34 @@ export default class Unit extends Object3D {
 
     update() {
         this.marker.rotation.y += 0.01;
+        this.state = 'idle'
+        if (this.steps > 0) {
+            this.state = 'moving'
+            this.translateX(this.stepV.x)
+            this.translateZ(this.stepV.y)
+            this.steps--
+        }
     }
+
+    calculatePath() {
+        let posV2 = new Vector2(this.position.x, this.position.z)
+        let desV2 = new Vector2(this.destination.x, this.destination.z)
+        let distance = posV2.distanceTo(desV2)
+        let subV2 = desV2.clone().sub(posV2.clone())
+        let steps = distance / this.speed
+        // stepujący wektor
+        let stepV2 = subV2.divideScalar(steps)
+        this.steps = steps
+        this.stepV = stepV2
+        this.mesh.rotation.y = (-stepV2.angle())
+    }
+
+
+
+
+
+
+
 
     invertSelect() {
         if (this.selected) {
