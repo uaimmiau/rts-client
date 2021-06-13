@@ -10,7 +10,8 @@ import {
     PlaneGeometry,
     MeshBasicMaterial,
     DoubleSide,
-    Mesh
+    Mesh,
+    MeshPhongMaterial
 } from 'three'
 import Renderer from './Renderer'
 import Camera from './Camera'
@@ -41,12 +42,13 @@ export default class Main {
         this.camera.position.set(100, 100, 100)
         this.camera.lookAt(new Vector3(0, 0, 0))
         this.grid = new GridHelper(1000, 10)
-        this.scene.add(this.grid)
+        // this.scene.add(this.grid)
 
         let geometry = new PlaneGeometry(1000, 1000);
-        let material = new MeshBasicMaterial({
+        let material = new MeshPhongMaterial({
             color: 0x65C9EA,
-            side: DoubleSide
+            side: DoubleSide,
+            shininess: 10
         });
 
         let plane = new Mesh(geometry, material);
@@ -99,9 +101,16 @@ export default class Main {
         }
 
         // adding some light to see the models
-        let l = new Light()
-        l.position.set(0, 100, 0)
-        this.scene.add(l)
+        for (let i = -5; i < 5; i++) {
+            for (let j = -5; j < 5; j++) {
+                if (Math.random() > 0.9) {
+
+                    let l = new Light()
+                    l.position.set(i * 100, 100, j * 100)
+                    this.scene.add(l)
+                }
+            }
+        }
 
 
         let check = document.querySelector('#c1')

@@ -9,7 +9,7 @@ import {
 export default class Light extends Object3D {
     constructor() {
         super()
-        this.light = new PointLight(0xffffff, 1, 500)
+        this.light = new PointLight(0xffffff, 0.8, 500)
         this.light.position.set(0, 0, 0)
         this.light.castShadow = true
         this.add(this.light)
