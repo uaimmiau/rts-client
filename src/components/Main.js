@@ -105,6 +105,15 @@ export default class Main {
                 });
             });
 
+            this.websocket.addEventListener(GameEvents.MOVE_UNIT, ({ globalId, destination }) => {
+                let unitToMove = this.units.find(({ unit }) => unit.globalId === globalId);
+                if (unitToMove) {
+                    console.log(`Found unit to move: ${unitToMove}`);
+                    unitToMove.unit.destination = new Vector3(destination.x, destination.y, destination.z);
+                    unitToMove.unit.calculatePath();
+                }
+            })
+
             new Select(this.raycaster, this.camera, this.scene, this.units, this.websocket, this.plane);
         }
 

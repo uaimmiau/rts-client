@@ -37,11 +37,11 @@ export default class Select {
                         destination.z += (Math.random() * 16 * i - 8 * i)
                         this.websocket.sendData(GameEvents.MOVE_UNIT, {
                             globalId: selectedUnit.globalId,
-                            destination
+                            destination,
                         });
                         // Calculate the path, steps and start moving the unit
-                        selectedUnit.destination = destination
-                        selectedUnit.calculatePath()
+                        //selectedUnit.destination = destination;
+                        //selectedUnit.calculatePath()
                         // Deselect after issuing order
                         if (Config.autoDeselect) selectedUnit.deselect()
                         i++
@@ -54,7 +54,7 @@ export default class Select {
                 }
 
             }
-        })
+        });
     }
 
     deselectAllUnits() {
