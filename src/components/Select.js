@@ -2,8 +2,9 @@ import {
     Vector2,
     Vector3
 } from "three"
-import Config from "../../../projekt fps/three/src/components/Config";
+
 import GameEvents from "./communication/GameEvents";
+import Config from "./Config";
 
 export default class Select {
     constructor(raycaster, camera, scene, units, websocket, plane) {
@@ -42,7 +43,7 @@ export default class Select {
                         selectedUnit.destination = destination
                         selectedUnit.calculatePath()
                         // Deselect after issuing order
-                        selectedUnit.deselect()
+                        if (Config.autoDeselect) selectedUnit.deselect()
                         i++
                     });
                 } else {

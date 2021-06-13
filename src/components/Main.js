@@ -55,10 +55,6 @@ export default class Main {
         this.plane.position.y = -1;
         this.plane.rotateX(Math.PI / 2);
 
-
-        // this.player = new Player()
-        // this.player.position.set(0, 10, 0)
-        // this.scene.add(this.player)
         this.keybord = new Keyboard(window)
         this.raycaster = new Raycaster()
 
@@ -71,19 +67,6 @@ export default class Main {
         this.model = new Model(this.manager)
         this.model.load(marioMD2)
         this.manager.onLoad = () => {
-            // for (let i = 0; i < 3; i++) {
-            //     let unit = new Unit(this.model.mesh.clone())
-            //     unit.deselect();
-            //     let anim = new Animation(unit.mesh);
-            //     unit.position.set(50 * i, 25, 0)
-            //     this.scene.add(unit);
-            //     this.units.push({
-            //         unit: unit,
-            //         anim: anim,
-            //         state: 'idle'
-            //     });
-            // }
-
             // Websocket
             this.websocket = new ClientSocket('ws://localhost:4567/socket');
 
@@ -121,8 +104,10 @@ export default class Main {
         this.scene.add(l)
 
 
-        // this.div = document.querySelector('#num')
-        // this.prev = document.querySelector('#prev')
+        let check = document.querySelector('#c1')
+        check.addEventListener('click', () => {
+            Config.autoDeselect = check.checked
+        })
 
         // this.controls = new OrbitControls(this.camera, this.renderer.domElement)
         this.controls = new MapControls(this.camera, this.renderer.domElement)

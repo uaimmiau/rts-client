@@ -7,5 +7,6 @@ export default {
     camHeight: 100,
     lookX: 0,
     lookZ: 0,
-    selected: null
+    selected: null,
+    autoDeselect: false
 }
