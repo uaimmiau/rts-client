@@ -13,7 +13,7 @@ import Config from "./Config";
 import marioTex from "./assets/mario.jpg"
 
 export default class Unit extends Object3D {
-    constructor(mesh, material, websocket, playerId, globalId, type, thisPlayerId) {
+    constructor(mesh, material, websocket, playerId, globalId, type, thisPlayerId, scene) {
         super();
         this.mesh = mesh;
         this.material = material
@@ -23,6 +23,7 @@ export default class Unit extends Object3D {
         this.globalId = globalId;
         this.type = type;
         this.thisPlayerId = thisPlayerId // Name could use some work :P
+        this.scene = scene
         this.destination = null;
         this.speed = 0.8;
         this.add(this.mesh)
@@ -38,6 +39,12 @@ export default class Unit extends Object3D {
         if (playerId != thisPlayerId) {
             this.mesh.material.map = new TextureLoader().load(marioTex)
         }
+        this.reload = 500
+        this.loaded = true
+        this.range = 200
+        this.laserMesh = null
+        this.laserTime = 50
+        this.firing = false
     }
 
     select() {
@@ -63,6 +70,19 @@ export default class Unit extends Object3D {
                 position: this.position,
                 // destination: this.destination
             });
+        }
+        if (this.reload == 0) {
+            this.loaded = true
+        } else {
+            this.reload--
+        }
+        if (this.firing) {
+            this.laserTime--
+        }
+        if (this.laserTime == 0) {
+            this.scene.remove(this.laserMesh)
+            this.laserTime = 50
+            this.firing = false
         }
     }
 

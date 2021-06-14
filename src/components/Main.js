@@ -11,7 +11,13 @@ import {
     MeshBasicMaterial,
     DoubleSide,
     Mesh,
-    MeshPhongMaterial
+    MeshPhongMaterial,
+    AdditiveBlending,
+    PointsMaterial,
+    BufferGeometry,
+    TextureLoader,
+    BufferAttribute,
+    Points
 } from 'three'
 import Renderer from './Renderer'
 import Camera from './Camera'
@@ -33,6 +39,8 @@ import Select from './Select'
 import ClientSocket from './communication/ClientSocket'
 import GameEvents from './communication/GameEvents'
 import Cookies from 'js-cookie'
+import Misc from './Misc'
+import fireTex from "./assets/fire.png"
 
 export default class Main {
     constructor(container) {
@@ -61,6 +69,7 @@ export default class Main {
         this.keybord = new Keyboard(window);
         this.raycaster = new Raycaster();
         this.connectionData = {};
+        this.misc = null
 
         // C(l)ock
         this.clock = new Clock()
@@ -100,7 +109,7 @@ export default class Main {
                 position,
                 destination,
             }) => {
-                let unit = new Unit(this.model.mesh.clone(), this.model.mesh.material.clone(), this.websocket, playerId, globalId, type, this.connectionData.playerId);
+                let unit = new Unit(this.model.mesh.clone(), this.model.mesh.material.clone(), this.websocket, playerId, globalId, type, this.connectionData.playerId, this.scene);
                 unit.deselect();
                 let anim = new Animation(unit.mesh);
                 unit.position.set(position.x, position.y, position.z);
@@ -132,6 +141,7 @@ export default class Main {
             })
 
             new Select(this.raycaster, this.camera, this.scene, this.units, this.websocket, this.plane, this.connectionData);
+            this.misc = new Misc(this.scene, this.units)
         }
 
         // adding some light to see the models
@@ -155,6 +165,20 @@ export default class Main {
         // this.controls = new OrbitControls(this.camera, this.renderer.domElement)
         this.controls = new MapControls(this.camera, this.renderer.domElement)
 
+        this.particlesCount = 20
+        this.particlesGeometry = new BufferGeometry()
+        this.verticesArray = new Float32Array(this.particlesCount * 3)
+        this.particleMaterial = new PointsMaterial({
+            color: 0x4f61ff,
+            depthWrite: false,
+            transparent: true,
+            size: 8,
+            map: new TextureLoader().load(fireTex),
+            blending: AdditiveBlending
+        })
+        this.randomness = 10
+
+
         this.render();
     }
 
@@ -168,6 +192,31 @@ export default class Main {
                 if (unit.unit.state == 'moving' && unit.anim.animName != 'crwalk') unit.anim.playAnim('crwalk')
             }
         }
+        this.units.map((unit) => unit.unit).filter((unit) => unit.thisPlayerId == unit.playerId).forEach((unit) => {
+            let closestEnemy = this.misc.getDistanceToEnemies(unit)
+            if (closestEnemy.distance < unit.range && unit.loaded) {
+
+                const v1 = unit.position.clone()
+                const v2 = closestEnemy.unit.position.clone()
+                const subV = v2.clone().sub(v1)
+                const stepV = subV.divideScalar(this.particlesCount)
+                for (let i = 0; i < this.particlesCount * 3; i += 3) {
+                    let v = v1.clone()
+                    for (let j = 0; j < i / 3; j++) v = v.clone().add(stepV)
+                    this.verticesArray[i] = v.x
+                    this.verticesArray[i + 1] = v.y
+                    this.verticesArray[i + 2] = v.z
+                }
+                let particlesGeometry = this.particlesGeometry.setAttribute('position', new BufferAttribute(this.verticesArray, 3)).clone()
+                const mesh = new Points(particlesGeometry, this.particleMaterial)
+                this.scene.add(mesh)
+                unit.laserMesh = mesh
+
+                unit.loaded = false
+                unit.reload = 500
+                unit.firing = true
+            }
+        })
 
 
         this.renderer.render(this.scene, this.camera);
