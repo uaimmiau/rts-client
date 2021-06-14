@@ -35,7 +35,6 @@ export default class Unit extends Object3D {
         this.steps = 0
         this.stepV = null
         this.state = 'idle'
-        console.log(playerId, thisPlayerId)
         if (playerId != thisPlayerId) {
             this.mesh.material.map = new TextureLoader().load(marioTex)
         }
