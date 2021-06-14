@@ -74,7 +74,7 @@ export default class Main {
 
 
             // Websocket
-            this.websocket = new ClientSocket(`ws://localhost:4567/socket`); // local development
+            this.websocket = new ClientSocket(`ws://localhost:5000/socket`); // local development
             // this.websocket = new ClientSocket(`wss://${location.hostname}:${location.port}/socket`); // heroku deploy
 
             // Get nickname from server
