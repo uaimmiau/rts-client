@@ -58,8 +58,9 @@ export default class Main {
         this.plane.position.y = -1;
         this.plane.rotateX(Math.PI / 2);
 
-        this.keybord = new Keyboard(window)
-        this.raycaster = new Raycaster()
+        this.keybord = new Keyboard(window);
+        this.raycaster = new Raycaster();
+        this.connectionData = {};
 
         // C(l)ock
         this.clock = new Clock()
@@ -70,6 +71,8 @@ export default class Main {
         this.model = new Model(this.manager)
         this.model.load(marioMD2)
         this.manager.onLoad = () => {
+
+
             // Websocket
             this.websocket = new ClientSocket('ws://localhost:4567/socket');
 
@@ -80,7 +83,10 @@ export default class Main {
                 sessionId,
                 sessIdCookieName,
             }) => {
-                this.nickname = nickname;
+                this.connectionData.nickname = nickname;
+                this.connectionData.playerId = playerId;
+                this.connectionData.sessionId = sessionId;
+                this.connectionData.sessIdCookieName = sessIdCookieName;
                 console.log(`Assigned nickname: ${nickname}`);
                 Cookies.set(sessIdCookieName, sessionId);
                 console.log(`Assigned sessionId: ${sessionId}`);
@@ -93,7 +99,7 @@ export default class Main {
                 position,
                 destination,
             }) => {
-                let unit = new Unit(this.model.mesh.clone(), playerId, globalId, type);
+                let unit = new Unit(this.model.mesh.clone(), this.websocket, playerId, globalId, type);
                 unit.deselect();
                 let anim = new Animation(unit.mesh);
                 unit.position.set(position.x, position.y, position.z);
@@ -105,16 +111,20 @@ export default class Main {
                 });
             });
 
-            this.websocket.addEventListener(GameEvents.MOVE_UNIT, ({ globalId, destination }) => {
+            this.websocket.addEventListener(GameEvents.MOVE_UNIT, ({ globalId, position, destination }) => {
                 let unitToMove = this.units.find(({ unit }) => unit.globalId === globalId);
                 if (unitToMove) {
-                    console.log(`Found unit to move: ${unitToMove}`);
-                    unitToMove.unit.destination = new Vector3(destination.x, destination.y, destination.z);
-                    unitToMove.unit.calculatePath();
+                    if (destination) {
+                        unitToMove.unit.destination = new Vector3(destination.x, destination.y, destination.z);
+                        unitToMove.unit.calculatePath();
+                    }
+                    if (unitToMove.unit.playerId !== this.connectionData.playerId) {
+                        unitToMove.unit.position.set(position.x, position.y, position.z);
+                    }
                 }
             })
 
-            new Select(this.raycaster, this.camera, this.scene, this.units, this.websocket, this.plane);
+            new Select(this.raycaster, this.camera, this.scene, this.units, this.websocket, this.plane, this.connectionData);
         }
 
         // adding some light to see the models

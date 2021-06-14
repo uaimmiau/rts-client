@@ -7,12 +7,14 @@ import {
     OctahedronGeometry,
     Vector2
 } from "three";
+import GameEvents from "./communication/GameEvents";
 import Config from "./Config";
 
 export default class Unit extends Object3D {
-    constructor(mesh, playerId, globalId, type) {
+    constructor(mesh, websocket, playerId, globalId, type) {
         super();
         this.mesh = mesh;
+        this.websocket = websocket;
         this.playerId = playerId;
         this.globalId = globalId;
         this.type = type;
@@ -47,9 +49,14 @@ export default class Unit extends Object3D {
         this.state = 'idle'
         if (this.steps > 0) {
             this.state = 'moving'
-            this.translateX(this.stepV.x)
-            this.translateZ(this.stepV.y)
-            this.steps--
+            this.translateX(this.stepV.x);
+            this.translateZ(this.stepV.y);
+            this.steps--;
+            this.websocket.sendData(GameEvents.MOVE_UNIT, {
+                globalId: this.globalId,
+                position: this.position,
+                // destination: this.destination
+            });
         }
     }
 

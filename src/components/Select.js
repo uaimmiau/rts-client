@@ -7,13 +7,14 @@ import GameEvents from "./communication/GameEvents";
 import Config from "./Config";
 
 export default class Select {
-    constructor(raycaster, camera, scene, units, websocket, plane) {
+    constructor(raycaster, camera, scene, units, websocket, plane, connectionData) {
         this.raycaster = raycaster;
         this.camera = camera;
         this.scene = scene;
         this.units = units;
         this.websocket = websocket;
         this.plane = plane;
+        this.connectionData = connectionData;
         let mouseVector = new Vector2();
 
         document.addEventListener('click', (e) => {
@@ -37,6 +38,7 @@ export default class Select {
                         destination.z += (Math.random() * 16 * i - 8 * i)
                         this.websocket.sendData(GameEvents.MOVE_UNIT, {
                             globalId: selectedUnit.globalId,
+                            position: selectedUnit.position,
                             destination,
                         });
                         // Calculate the path, steps and start moving the unit
@@ -48,9 +50,11 @@ export default class Select {
                     });
                 } else {
                     const parent = intersects[0].object.parent;
-                    const selected = parent.selected;
-                    parent.select();
-                    if (selected) parent.deselect();
+                    if (this.connectionData.playerId === parent.playerId) {
+                        const selected = parent.selected;
+                        parent.select();
+                        if (selected) parent.deselect();
+                    }
                 }
 
             }
