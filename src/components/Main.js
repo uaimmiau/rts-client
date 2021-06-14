@@ -99,7 +99,7 @@ export default class Main {
                 position,
                 destination,
             }) => {
-                let unit = new Unit(this.model.mesh.clone(), this.websocket, playerId, globalId, type);
+                let unit = new Unit(this.model.mesh.clone(), this.model.mesh.material.clone(), this.websocket, playerId, globalId, type, this.connectionData.playerId);
                 unit.deselect();
                 let anim = new Animation(unit.mesh);
                 unit.position.set(position.x, position.y, position.z);
@@ -111,8 +111,14 @@ export default class Main {
                 });
             });
 
-            this.websocket.addEventListener(GameEvents.MOVE_UNIT, ({ globalId, position, destination }) => {
-                let unitToMove = this.units.find(({ unit }) => unit.globalId === globalId);
+            this.websocket.addEventListener(GameEvents.MOVE_UNIT, ({
+                globalId,
+                position,
+                destination
+            }) => {
+                let unitToMove = this.units.find(({
+                    unit
+                }) => unit.globalId === globalId);
                 if (unitToMove) {
                     if (destination) {
                         unitToMove.unit.destination = new Vector3(destination.x, destination.y, destination.z);

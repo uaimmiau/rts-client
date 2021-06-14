@@ -5,19 +5,24 @@ import {
     MeshNormalMaterial,
     Object3D,
     OctahedronGeometry,
+    TextureLoader,
     Vector2
 } from "three";
 import GameEvents from "./communication/GameEvents";
 import Config from "./Config";
+import marioTex from "./assets/mario.jpg"
 
 export default class Unit extends Object3D {
-    constructor(mesh, websocket, playerId, globalId, type) {
+    constructor(mesh, material, websocket, playerId, globalId, type, thisPlayerId) {
         super();
         this.mesh = mesh;
+        this.material = material
+        this.mesh.material = this.material
         this.websocket = websocket;
         this.playerId = playerId;
         this.globalId = globalId;
         this.type = type;
+        this.thisPlayerId = thisPlayerId // Name could use some work :P
         this.destination = null;
         this.speed = 0.8;
         this.add(this.mesh)
@@ -30,17 +35,19 @@ export default class Unit extends Object3D {
         this.steps = 0
         this.stepV = null
         this.state = 'idle'
+        console.log(playerId, thisPlayerId)
+        if (playerId != thisPlayerId) {
+            this.mesh.material.map = new TextureLoader().load(marioTex)
+        }
     }
 
     select() {
         this.marker.visible = true;
-        Config.selected = this;
         this.selected = true;
     }
 
     deselect() {
         this.marker.visible = false;
-        Config.selected = null;
         this.selected = false;
     }
 
