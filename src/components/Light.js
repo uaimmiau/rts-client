@@ -3,14 +3,18 @@ import {
     PointLight,
     SphereGeometry,
     MeshBasicMaterial,
-    Mesh
+    Mesh,
+    AmbientLight,
+    SpotLight,
+    DirectionalLight
 } from "three"
 
 export default class Light extends Object3D {
     constructor() {
         super()
-        this.light = new PointLight(0xffffff, 0.8, 500)
+        this.light = new DirectionalLight(0xffffff, 0.8, 500)
         this.light.position.set(0, 0, 0)
+        this.light.intensity = 1;
         this.light.castShadow = true
         this.add(this.light)
 

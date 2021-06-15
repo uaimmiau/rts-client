@@ -47,6 +47,7 @@ export default class Main {
         this.container = container
         this.scene = new Scene()
         this.renderer = new Renderer(container)
+        //this.renderer.setClearColor(0x000000)
         this.camera = new Camera(75, window.innerWidth, window.innerHeight)
         this.camera.position.set(100, 100, 100)
         this.camera.lookAt(new Vector3(0, 0, 0))
@@ -140,19 +141,45 @@ export default class Main {
                 }
             })
 
+            this.websocket.addEventListener(GameEvents.UNIT_KILLED, ({
+                globalId
+            }) => {
+                console.log(`Unit ${globalId} was killed!`);
+                let killedUnit = this.units.find((unit) => unit.unit.globalId === globalId);
+                if (killedUnit) {
+                    killedUnit.unit.dead = true;
+                }
+            });
+
+            this.websocket.addEventListener(GameEvents.GAME_OVER, ({
+                winnerId,
+                winnerNickname
+            }) => {
+                window.alert(`Winner: ${winnerNickname}`);
+            });
+
             new Select(this.raycaster, this.camera, this.scene, this.units, this.websocket, this.plane, this.connectionData);
             this.misc = new Misc(this.scene, this.units)
         }
 
         // adding some light to see the models
-        for (let i = -5; i < 5; i++) {
-            for (let j = -5; j < 5; j++) {
-                if (Math.random() > 0.9) {
+        this.renderer.setClearColor(0x000000);
+        // for (let i = -5; i < 5; i++) {
+        //     for (let j = -5; j < 5; j++) {
+        //         //if (Math.random() > 0.9) {
 
-                    let l = new Light()
-                    l.position.set(i * 100, 100, j * 100)
-                    this.scene.add(l)
-                }
+        //         let l = new Light()
+        //         l.position.set(i * 100, 100, j * 100)
+        //         this.scene.add(l)
+        //         //}
+        //     }
+        // }
+        for (let i = -1; i <= 1; i += 2) {
+            for (let j = -1; j <= 1; j += 2) {
+
+                let l = new Light()
+                l.position.set(i * 250, 100, j * 250)
+                this.scene.add(l)
             }
         }
 
@@ -161,6 +188,11 @@ export default class Main {
         check.addEventListener('click', () => {
             Config.autoDeselect = check.checked
         })
+
+        let newGameBtn = document.getElementById('newgamebtn');
+        newGameBtn.addEventListener('click', () => {
+            this.websocket.sendData(GameEvents.GAME_OVER, null);
+        });
 
         // this.controls = new OrbitControls(this.camera, this.renderer.domElement)
         this.controls = new MapControls(this.camera, this.renderer.domElement)
@@ -185,6 +217,14 @@ export default class Main {
     render() {
         let delta = this.clock.getDelta()
         for (let unit of this.units) {
+            if (unit.unit.dead) {
+                console.log("Found a dead unit with id = !" + unit.unit.globalId);
+                console.log(unit);
+                this.scene.remove(unit.unit);
+                let index = this.units.map((unit) => unit.unit).indexOf(unit);
+                this.units.splice(index, 1);
+            }
+
             unit.unit.update()
             if (unit.anim) {
                 unit.anim.update(delta)
@@ -194,7 +234,7 @@ export default class Main {
         }
         this.units.map((unit) => unit.unit).filter((unit) => unit.thisPlayerId == unit.playerId).forEach((unit) => {
             let closestEnemy = this.misc.getDistanceToEnemies(unit)
-            if (closestEnemy.distance < unit.range && unit.loaded) {
+            if (closestEnemy.distance < unit.range && unit.loaded && unit.state === 'idle') {
 
                 const v1 = unit.position.clone()
                 const v2 = closestEnemy.unit.position.clone()
@@ -215,6 +255,12 @@ export default class Main {
                 unit.loaded = false
                 unit.reload = 500
                 unit.firing = true
+
+                this.websocket.sendData(GameEvents.SHOOT_AT_ENEMY, {
+                    globalId: unit.globalId,
+                    enemyGlobalId: closestEnemy.unit.globalId,
+                    distance: closestEnemy.distance,
+                })
             }
         })
 

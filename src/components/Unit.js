@@ -45,6 +45,8 @@ export default class Unit extends Object3D {
         this.laserMesh = null
         this.laserTime = 50
         this.firing = false
+
+        this.dead = false;
     }
 
     select() {
@@ -85,6 +87,7 @@ export default class Unit extends Object3D {
             this.firing = false
         }
     }
+
 
     calculatePath() {
         let posV2 = new Vector2(this.position.x, this.position.z)
