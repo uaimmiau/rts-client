@@ -1,11 +1,13 @@
-let HtmlWebpackPlugin = require('html-webpack-plugin')
+let HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
 
 module.exports = {
     entry: './src/index.js',
     output: {
-        filename: 'bundle.js' // bundle.js to wynik kompilacji projektu przez webpacka
+        filename: 'bundle.js',
+        // path: path.resolve(__dirname, '../rts-server/src/main/resources/public/'),
     },
-    mode: 'development', // none, development, production
+    mode: 'development',
     devServer: {
         port: 8080
     },

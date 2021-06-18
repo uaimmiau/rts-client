@@ -24,7 +24,7 @@ export default class Light extends Object3D {
             wireframe: true
         })
         let mesh = new Mesh(this.geometry, this.material)
-        this.add(mesh)
+        // this.add(mesh)
         this.castShadow = true
     }
 }

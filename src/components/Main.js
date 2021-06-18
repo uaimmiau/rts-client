@@ -84,7 +84,7 @@ export default class Main {
 
 
             // Websocket
-            this.websocket = new ClientSocket(`ws://localhost:5000/socket`); // local development
+            this.websocket = new ClientSocket(`ws://192.168.1.174:5000/socket`); // local development
             // this.websocket = new ClientSocket(`wss://${location.hostname}:${location.port}/socket`); // heroku deploy
 
             // Get nickname from server
@@ -139,7 +139,12 @@ export default class Main {
                         unitToMove.unit.position.set(position.x, position.y, position.z);
                     }
                 }
-            })
+            });
+
+            this.websocket.addEventListener(GameEvents.NEW_GAME, () => {
+                console.log("NEW GAME");
+                window.location.reload();
+            });
 
             this.websocket.addEventListener(GameEvents.UNIT_KILLED, ({
                 globalId
@@ -191,7 +196,7 @@ export default class Main {
 
         let newGameBtn = document.getElementById('newgamebtn');
         newGameBtn.addEventListener('click', () => {
-            this.websocket.sendData(GameEvents.GAME_OVER, null);
+            this.websocket.sendData(GameEvents.NEW_GAME, null);
         });
 
         // this.controls = new OrbitControls(this.camera, this.renderer.domElement)
@@ -221,7 +226,7 @@ export default class Main {
                 console.log("Found a dead unit with id = !" + unit.unit.globalId);
                 console.log(unit);
                 this.scene.remove(unit.unit);
-                let index = this.units.map((unit) => unit.unit).indexOf(unit);
+                let index = this.units.indexOf(unit);
                 this.units.splice(index, 1);
             }
 
